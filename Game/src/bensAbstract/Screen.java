@@ -9,7 +9,7 @@ public abstract class Screen
 {
 	protected boolean gameRunning = true;
 	protected BufferedImage pixels;
-	protected JPanel panel;
+	private JPanel panel;
 	private int SKIP_TICKS;
 	private static final int MAX_FRAMESKIP = 10;
 	
@@ -56,5 +56,10 @@ public abstract class Screen
 	 * Should change your pixels
 	 */
 	protected abstract void update();
+
+	public JPanel getPanel()
+	{
+		return panel;
+	}
 
 }
