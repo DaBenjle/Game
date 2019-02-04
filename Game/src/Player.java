@@ -9,7 +9,7 @@ public class Player implements KeyListener
 	private Direction dir;
 	private int width, height;
 	public boolean dead = false, start = false;
-	
+
 	public Player(int width, int height)
 	{
 		Random rand = new Random();
@@ -18,33 +18,33 @@ public class Player implements KeyListener
 		this.width = width;
 		this.height = height;
 	}
-	
+
 	public void move()
 	{
-		switch(dir)
+		switch (dir)
 		{
-			case NORTH:
-				specifiedMove(false, false);
-				break;
-			case SOUTH:
-				specifiedMove(false, true);
-				break;
-			case WEST:
-				specifiedMove(true, false);
-				break;
-			case EAST:
-				specifiedMove(true, true);
-				break;
+		case NORTH:
+			specifiedMove(false, false);
+			break;
+		case SOUTH:
+			specifiedMove(false, true);
+			break;
+		case WEST:
+			specifiedMove(true, false);
+			break;
+		case EAST:
+			specifiedMove(true, true);
+			break;
 		}
 	}
-	
+
 	private void specifiedMove(boolean x, boolean positive)
 	{
-		if(x)
+		if (x)
 		{
-			if(positive)
+			if (positive)
 			{
-				if(pos.width < width - 1)
+				if (pos.width < width - 1)
 				{
 					pos.width++;
 				}
@@ -55,7 +55,7 @@ public class Player implements KeyListener
 			}
 			else
 			{
-				if(pos.width > 0)
+				if (pos.width > 0)
 				{
 					pos.width--;
 				}
@@ -67,9 +67,9 @@ public class Player implements KeyListener
 		}
 		else
 		{
-			if(positive)
+			if (positive)
 			{
-				if(pos.height < height - 1)
+				if (pos.height < height - 1)
 				{
 					pos.height++;
 				}
@@ -80,7 +80,7 @@ public class Player implements KeyListener
 			}
 			else
 			{
-				if(pos.height > 0)
+				if (pos.height > 0)
 				{
 					pos.height--;
 				}
@@ -97,26 +97,26 @@ public class Player implements KeyListener
 	{
 		char c = e.getKeyChar();
 		c = Character.toLowerCase(c);
-		if(!start)
+		if (!start)
 		{
 			start = true;
 		}
-		switch(c)
+		switch (c)
 		{
-			case 'w':
-				dir = Direction.NORTH;
-				break;
-			case 's':
-				dir = Direction.SOUTH;
-				break;
-			case 'a':
-				dir = Direction.WEST;
-				break;
-			case 'd':
-				dir = Direction.EAST;
-				break;
+		case 'w':
+			dir = Direction.NORTH;
+			break;
+		case 's':
+			dir = Direction.SOUTH;
+			break;
+		case 'a':
+			dir = Direction.WEST;
+			break;
+		case 'd':
+			dir = Direction.EAST;
+			break;
 		}
-		
+
 	}
 
 	@Override
@@ -130,9 +130,19 @@ public class Player implements KeyListener
 	{
 		// do nothing
 	}
-	
+
 	public static enum Direction
 	{
 		NORTH, SOUTH, EAST, WEST;
+	}
+
+	public static class Coordinate
+	{
+		private int x, y;
+		public Coordinate(int x, int y)
+		{
+			this.x = x;
+			this.y = y;
+		}
 	}
 }

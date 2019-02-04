@@ -13,7 +13,7 @@ public class Game
 	public static final int HALF = SIDE_LENGTH / 2, ADD_HALF = ADD_SIDE_LENGTH / 2;
 	public static final int XLENGTH = 5, YLENGTH = 4;
 	public static final int SPECIFIED_FRAME = 15;
-	public static final int MOVE_TIME = 1000;
+	public static final int MOVE_TIME = 450;
 	
 	private MyScreen screen;
 	private BufferedImage curFrame;
