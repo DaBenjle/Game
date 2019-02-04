@@ -1,6 +1,8 @@
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JFrame;
 
@@ -11,11 +13,15 @@ public class Game
 	public static final int HALF = SIDE_LENGTH / 2, ADD_HALF = ADD_SIDE_LENGTH / 2;
 	public static final int XLENGTH = 5, YLENGTH = 4;
 	public static final int SPECIFIED_FRAME = 15;
+	public static final int MOVE_TIME = 1000;
+	
 	private MyScreen screen;
 	private BufferedImage curFrame;
 	private JFrame frame;
 	private Player player;
 	private int curFrameInt = 0;
+	private Timer move;
+	private boolean started = false;
 	
 	public Game()
 	{
@@ -24,6 +30,29 @@ public class Game
 		player = new Player(XLENGTH, YLENGTH);
 		frame.addKeyListener(player);
 		screen.start();
+	}
+	
+	public void start()
+	{
+		move = new Timer();
+		move.scheduleAtFixedRate(new TimerTask()
+				{
+					@Override
+					public void run()
+					{
+						player.move();
+						if(player.dead)
+						{
+							die();
+						}
+					}
+				}, 1000, MOVE_TIME);
+	}
+	
+	private void die()
+	{
+		move.cancel();
+		curFrameInt = SPECIFIED_FRAME + 1;
 	}
 	
 	private void initFrame()
@@ -65,11 +94,22 @@ public class Game
 				g.fillRect(xPix - HALF, yPix - HALF, SIDE_LENGTH, SIDE_LENGTH);
 			}
 		}
+		
 		curFrameInt++;
-		if(curFrameInt == 15)
+		if(curFrameInt == SPECIFIED_FRAME)
 		{
 			curFrameInt = 0;
 		}
+		
+		if(!started)
+		{
+			if(player.start)
+			{
+				started = true;
+				start();
+			}
+		}
+		
 		return curFrame;
 	}
 	

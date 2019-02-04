@@ -1,17 +1,95 @@
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 public class Player implements KeyListener
 {
 	public Dimension pos;
+	private Direction dir;
 	private int width, height;
+	public boolean dead = false, start = false;
 	
 	public Player(int width, int height)
 	{
-		pos = new Dimension(0, 0);
-		this.width = width - 1;
-		this.height = height - 1;
+		Random rand = new Random();
+		pos = new Dimension(rand.nextInt(width), rand.nextInt(height));
+		dir = Direction.values()[rand.nextInt(Direction.values().length)];
+		this.width = width;
+		this.height = height;
+	}
+	
+	public void move()
+	{
+		switch(dir)
+		{
+			case NORTH:
+				specifiedMove(false, false);
+				break;
+			case SOUTH:
+				specifiedMove(false, true);
+				break;
+			case WEST:
+				specifiedMove(true, false);
+				break;
+			case EAST:
+				specifiedMove(true, true);
+				break;
+		}
+	}
+	
+	private void specifiedMove(boolean x, boolean positive)
+	{
+		if(x)
+		{
+			if(positive)
+			{
+				if(pos.width < width - 1)
+				{
+					pos.width++;
+				}
+				else
+				{
+					dead = true;
+				}
+			}
+			else
+			{
+				if(pos.width > 0)
+				{
+					pos.width--;
+				}
+				else
+				{
+					dead = true;
+				}
+			}
+		}
+		else
+		{
+			if(positive)
+			{
+				if(pos.height < height - 1)
+				{
+					pos.height++;
+				}
+				else
+				{
+					dead = true;
+				}
+			}
+			else
+			{
+				if(pos.height > 0)
+				{
+					pos.height--;
+				}
+				else
+				{
+					dead = true;
+				}
+			}
+		}
 	}
 
 	@Override
@@ -19,32 +97,26 @@ public class Player implements KeyListener
 	{
 		char c = e.getKeyChar();
 		c = Character.toLowerCase(c);
+		if(!start)
+		{
+			start = true;
+		}
 		switch(c)
 		{
 			case 'w':
-				if(pos.height > 0)
-				{
-					pos.height--;
-				}
+				dir = Direction.NORTH;
 				break;
 			case 's':
-				if(pos.height < height)
-				{
-					pos.height++;
-				}
+				dir = Direction.SOUTH;
 				break;
 			case 'a':
-				if(pos.width > 0)
-				{
-					pos.width--;
-				}
+				dir = Direction.WEST;
 				break;
 			case 'd':
-				if(pos.width < width)
-				{
-					pos.width++;
-				}
+				dir = Direction.EAST;
+				break;
 		}
+		
 	}
 
 	@Override
@@ -59,4 +131,8 @@ public class Player implements KeyListener
 		// do nothing
 	}
 	
+	public static enum Direction
+	{
+		NORTH, SOUTH, EAST, WEST;
+	}
 }
