@@ -10,8 +10,8 @@ public class Player implements KeyListener
 	public Player(int width, int height)
 	{
 		pos = new Dimension(0, 0);
-		this.width = width;
-		this.height = height;
+		this.width = width - 1;
+		this.height = height - 1;
 	}
 
 	@Override

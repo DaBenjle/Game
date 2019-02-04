@@ -7,20 +7,21 @@ import javax.swing.JFrame;
 public class Game
 {
 	
-	public static int sideLength = 10, addSideLength = 6;
-	public static int half = sideLength / 2, addHalf = addSideLength / 2;
-	public static int XLENGTH = 5, YLENGTH = 4;
+	public static final int SIDE_LENGTH = 10, ADD_SIDE_LENGTH = 6;
+	public static final int HALF = SIDE_LENGTH / 2, ADD_HALF = ADD_SIDE_LENGTH / 2;
+	public static final int XLENGTH = 5, YLENGTH = 4;
+	public static final int SPECIFIED_FRAME = 15;
 	private MyScreen screen;
 	private BufferedImage curFrame;
 	private JFrame frame;
 	private Player player;
-	private int fifthFrame = 0;
+	private int curFrameInt = 0;
 	
 	public Game()
 	{
 		screen = new MyScreen(50, this);
 		initFrame();
-		player = new Player(XLENGTH - 1, YLENGTH - 1);
+		player = new Player(XLENGTH, YLENGTH);
 		frame.addKeyListener(player);
 		screen.start();
 	}
@@ -50,10 +51,10 @@ public class Game
 				int yPix = (y + 1) * fourthY;
 				if(x == player.pos.width && y == player.pos.height)
 				{
-					if(fifthFrame == 0)
+					if(curFrameInt == 0)
 					{
 						g.setColor(java.awt.Color.GREEN);
-						g.fillRect(xPix - half - addHalf, yPix - half - addHalf, sideLength + addSideLength, sideLength + addSideLength);
+						g.fillRect(xPix - HALF - ADD_HALF, yPix - HALF - ADD_HALF, SIDE_LENGTH + ADD_SIDE_LENGTH, SIDE_LENGTH + ADD_SIDE_LENGTH);
 					}
 					g.setColor(java.awt.Color.RED);
 				}
@@ -61,13 +62,13 @@ public class Game
 				{
 					g.setColor(java.awt.Color.WHITE);
 				}
-				g.fillRect(xPix - half, yPix - half, sideLength, sideLength);
+				g.fillRect(xPix - HALF, yPix - HALF, SIDE_LENGTH, SIDE_LENGTH);
 			}
 		}
-		fifthFrame++;
-		if(fifthFrame == 15)
+		curFrameInt++;
+		if(curFrameInt == 15)
 		{
-			fifthFrame = 0;
+			curFrameInt = 0;
 		}
 		return curFrame;
 	}
