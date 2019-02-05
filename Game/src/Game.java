@@ -1,6 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,7 +41,12 @@ public class Game
 					@Override
 					public void run()
 					{
-						player.move();
+						boolean food = player.pos.get(0).equals(new Player.Coordinate(0, 0));
+						if(food)
+						{
+							System.out.println(true);
+						}
+						player.move(food);
 						if(player.dead)
 						{
 							die();
@@ -52,7 +58,7 @@ public class Game
 	private void die()
 	{
 		move.cancel();
-		curFrameInt = SPECIFIED_FRAME + 1;
+		curFrameInt = SPECIFIED_FRAME + player.pos.size() - 1;
 	}
 	
 	private void initFrame()
@@ -78,9 +84,18 @@ public class Game
 				int fourthX = width / (XLENGTH + 1); int fourthY = height / (YLENGTH + 1);
 				int xPix = (x + 1) * fourthX;
 				int yPix = (y + 1) * fourthY;
-				if(x == player.pos.width && y == player.pos.height)
+				boolean playerPos = false;
+				for(Player.Coordinate cur : player.pos)
 				{
-					if(curFrameInt == 0)
+					if(cur.x == x && cur.y == y)
+					{
+						playerPos = true;
+						break;
+					}
+				}
+				if(playerPos)
+				{
+					if(curFrameInt <= player.pos.size() - 1)
 					{
 						g.setColor(java.awt.Color.GREEN);
 						g.fillRect(xPix - HALF - ADD_HALF, yPix - HALF - ADD_HALF, SIDE_LENGTH + ADD_SIDE_LENGTH, SIDE_LENGTH + ADD_SIDE_LENGTH);
@@ -96,7 +111,7 @@ public class Game
 		}
 		
 		curFrameInt++;
-		if(curFrameInt == SPECIFIED_FRAME)
+		if(curFrameInt == SPECIFIED_FRAME + player.pos.size() - 1)
 		{
 			curFrameInt = 0;
 		}
