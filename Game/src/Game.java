@@ -41,11 +41,7 @@ public class Game
 					@Override
 					public void run()
 					{
-						boolean food = player.pos.get(0).equals(new Player.Coordinate(0, 0));
-						if(food)
-						{
-							System.out.println(true);
-						}
+						boolean food = player.onFood();
 						player.move(food);
 						if(player.dead)
 						{
@@ -81,13 +77,15 @@ public class Game
 		{
 			for(int y = 0; y < YLENGTH; y++)
 			{
+				Player.Coordinate curCoord = new Player.Coordinate(x, y);
 				int fourthX = width / (XLENGTH + 1); int fourthY = height / (YLENGTH + 1);
 				int xPix = (x + 1) * fourthX;
 				int yPix = (y + 1) * fourthY;
 				boolean playerPos = false;
-				for(Player.Coordinate cur : player.pos)
+				for(int i = 0; i < player.pos.size(); i++)
 				{
-					if(cur.x == x && cur.y == y)
+					Player.Coordinate cur = player.pos.get(i);
+					if(cur.equals(curCoord))
 					{
 						playerPos = true;
 						break;
@@ -95,12 +93,16 @@ public class Game
 				}
 				if(playerPos)
 				{
-					if(curFrameInt <= player.pos.size() - 1)
+					if(curFrameInt == 0)
 					{
 						g.setColor(java.awt.Color.GREEN);
 						g.fillRect(xPix - HALF - ADD_HALF, yPix - HALF - ADD_HALF, SIDE_LENGTH + ADD_SIDE_LENGTH, SIDE_LENGTH + ADD_SIDE_LENGTH);
 					}
 					g.setColor(java.awt.Color.RED);
+				}
+				else if(player.getFoodPos().equals(curCoord))
+				{
+					g.setColor(java.awt.Color.YELLOW);
 				}
 				else
 				{
@@ -111,7 +113,7 @@ public class Game
 		}
 		
 		curFrameInt++;
-		if(curFrameInt == SPECIFIED_FRAME + player.pos.size() - 1)
+		if(curFrameInt == SPECIFIED_FRAME)
 		{
 			curFrameInt = 0;
 		}

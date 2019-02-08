@@ -6,9 +6,10 @@ import java.util.Random;
 public class Player implements KeyListener
 {
 	public ArrayList<Coordinate> pos;
+	private Coordinate foodPos;
 	private Direction dir;
 	private int width, height;
-	public boolean dead = false, start = false;
+	public boolean dead = false, start = false, win = false;
 
 	public Player(int width, int height)
 	{
@@ -18,6 +19,7 @@ public class Player implements KeyListener
 		dir = Direction.values()[rand.nextInt(Direction.values().length)];
 		this.width = width;
 		this.height = height;
+		setFood();
 	}
 
 	public void move(boolean eat)
@@ -37,6 +39,10 @@ public class Player implements KeyListener
 			specifiedMove(true, true, eat);
 			break;
 		}
+		if(eat)
+		{
+			setFood();
+		}
 	}
 
 	private void specifiedMove(boolean x, boolean positive, boolean eat)
@@ -51,65 +57,51 @@ public class Player implements KeyListener
 			Coordinate cur = pos.get(i);
 			cur.setValues(pos.get(i - 1));
 		}
-		if(eat)
+		if(temp != null)
 		{
-			//should always work without this vvv if, but to be safe
-			if(temp != null)
-			{
-				pos.add(temp);
-			}
+			pos.add(temp);
 		}
+		
+		Coordinate targetLocation = pos.get(0).duplicate();;
 		
 		if(x)
 		{
 			if (positive)
 			{
-				if (pos.get(0).x < width - 1)
-				{
-					pos.get(0).x++;
-				}
-				else
-				{
-					dead = true;
-				}
+				targetLocation.x++;
 			}
 			else
 			{
-				if (pos.get(0).x > 0)
-				{
-					pos.get(0).x--;
-				}
-				else
-				{
-					dead = true;
-				}
+				targetLocation.x--;
 			}
 		}
 		else
 		{
 			if (positive)
 			{
-				if (pos.get(0).y < height - 1)
-				{
-					pos.get(0).y++;
-				}
-				else
-				{
-					dead = true;
-				}
+				targetLocation.y++;
 			}
 			else
 			{
-				if (pos.get(0).y > 0)
-				{
-					pos.get(0).y--;
-				}
-				else
-				{
-					dead = true;
-				}
+				targetLocation.y--;
 			}
 		}
+		
+		if(targetLocation.isOutside(width, height))
+		{
+			dead = true;
+			return;
+		}
+		
+		for(Coordinate cur : pos)
+		{
+			if(targetLocation.equals(cur))
+			{
+				dead = true;
+				return;
+			}
+		}
+		pos.set(0, targetLocation);
 	}
 
 	@Override
@@ -150,6 +142,40 @@ public class Player implements KeyListener
 	{
 		// do nothing
 	}
+	
+	public void setFood()
+	{
+		if(pos.size() == width * height)
+		{
+			win = true;
+			System.out.println(win);
+			return;
+		}
+		Random rand = new Random();
+		int x = rand.nextInt(width); int y = rand.nextInt(height);
+		
+		for(int i = 0; i < pos.size(); i++)
+		{
+			Coordinate cur = pos.get(i);
+			if(x == cur.x && y == cur.y)
+			{
+				x = rand.nextInt(width);
+				y = rand.nextInt(height);
+				i = 0;
+			}
+		}
+		foodPos = new Coordinate(x, y);
+	}
+	
+	public Coordinate getFoodPos()
+	{
+		return foodPos;
+	}
+	
+	public boolean onFood()
+	{
+		return pos.get(0).equals(foodPos);
+	}
 
 	public static enum Direction
 	{
@@ -165,6 +191,11 @@ public class Player implements KeyListener
 			this.y = y;
 		}
 		
+		public boolean isOutside(int w, int h)
+		{
+			return x > w || y > h || x < 0 || y < 0;
+		}
+
 		public void setValues(Coordinate input)
 		{
 			x = input.x;
